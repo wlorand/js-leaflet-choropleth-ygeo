@@ -1,0 +1,23 @@
+{
+  "name": "dataviz-wherehaus-us-poi-choropleth",
+  "version": "1.0.0",
+  "description": "Choropleth map of WhereHaus POIs at U.S. country scale that displays the count of POIs per State",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --inspect server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.ouroath.com:wlorand/dataviz-wherehaus-us-poi-choropleth.git"
+  },
+  "author": "william.lorand@oath.com",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.1.0",
+    "express": "^4.16.3",
+    "jade": "^1.11.0",
+    "morgan": "^1.9.0"
+  }
+}
