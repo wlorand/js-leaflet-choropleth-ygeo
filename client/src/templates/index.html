@@ -2,13 +2,169 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YGEO-5: Leaflet Choropleth de US State POIs: dataviz-wherehaus-us-poi-choropleth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- leaflet styles (cdn) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+  <style>
+    .dark {
+      background-color: rgba(0,0,0,0.9);
+    }
+    .map-canvas {
+      border-radius: 20px;	
+      height: 700px;	
+      margin: 30px auto;
+      width:  1000px;
+    }
+    .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .info h4 {
+      margin: 0 0 5px 0;
+      color: #777; 
+    }
+    .info__message {
+      font-size: smaller;
+      font-style: italic;
+    }
+    .legend {
+      color: #555;
+      line-height: 18px;
+      text-align: left; 
+    }
+    .legend i {
+      float: left; 
+      height: 17px;
+      margin-right: 4px;
+      opacity: 0.7;      
+      width: 18px;
+    }
+  </style>
 </head>
-<body>
+<body class="dark">
   
-  <h3>I Will Be a Choropleth</h3>
-  <p>YGEO-5: Leaflet Choropleth de US State POIs: dataviz-wherehaus-us-poi-choropleth</p>
+  <!-- map mount point -->
+  <div class="map-canvas" id="poi-choropleth-map"></div>
+
+  <!-- leafletJS lib (cdn) -->
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+  <!-- geojson data file -->
+  <script src="../sample-data/us-states-poi-data.js"></script>
+  
+  <script>
+  (function(){
+    'use strict';
+
+    // Add a Leaflet map 
+    var map = L.map('poi-choropleth-map').setView([37.70, -96.5], 4); // continental U.S.
+       
+    var mapboxAccessToken = 'pk.eyJ1IjoibW0zIiwiYSI6InI5OGJ0NU0ifQ.0nE3dCbDkeY1Cko21RKKVA';
+    var tileURL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken;
+    var attributionHTML = 'Basemap tiles &copy; <a href="https://www.mapbox.com/about/maps/" target="_blank"> MapBox</a> &nbsp;';
+    var geojson; 
+
+       // Add (Mapbox) TileLayer  
+       L.tileLayer(tileURL, {
+         id: 'mapbox.light', 
+         attribution: attributionHTML,
+       }).addTo(map);
+  
+         // Add GeoJSON Layer (w/options object) 
+         geojson = L.geoJson(usStatesPoiData, {
+             onEachFeature: setEventsOnEachState,
+             style: setChoroplethStyles
+         }).addTo(map);
+
+      // onEachFeature, set event listener fxns 
+      function setEventsOnEachState(feature, layer){
+          layer.on({
+              mouseover: highlightFeature,
+              mouseout: resetHighlight,
+              click: zoomToFeature 
+          });
+      }   
+      // geoJSON layer onEachFeature event listeners 
+      function highlightFeature(e) { 
+         var layer = e.target;
+         layer.bringToFront();
+         layer.setStyle({
+             weight: 3,
+             color: '#666',
+             dashArray: '',
+             fillOpacity: 0.7
+         });
+         info.update(layer.feature.properties);
+     }
+     function resetHighlight(e) {
+        geojson.resetStyle(e.target); 
+        info.update(); // clear the Info Control
+     } 
+    function zoomToFeature(e){
+        map.fitBounds(e.target.getBounds());
+     }
+
+    // geoJSON choropleth style fxns (style based on the data)
+    function setChoroplethStyles(feature){
+        return { 
+            color: 'white',
+            dashArray: '3',
+            fillColor: getDataClassColor(feature.properties.poi_count),
+            fillOpacity: 0.8,
+            opacity: 1,
+            weight: 2
+        };
+    }
+    function getDataClassColor(d){
+        return d > 20000 ? 'rgb(63,0,125)' :
+		           d > 10000 ? 'rgb(84,39,143)' :
+            	 d > 7500 ? 'rgb(106,81,163)' :
+        	     d > 5000 ? 'rgb(128,125,186)' : 
+               d > 2500 ? 'rgb(158,154,200)' :
+		                      'rgb(188,189,220)' ; // 0 - 2500
+    }
+    // Add Data-Driven Info Control 
+    var info = L.control();  
+    info.onAdd = function (map) { 
+        this._div = L.DomUtil.create('div', 'info'); // Leaflet DOM creation
+        this.update();
+        return this._div;
+    };  
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>WhereHaus POIs</h4>' +  
+        (props ? '<b>' + props.name + '</b>: ' + props.poi_count
+        : '<span class="info__message">hover over a state</span>'); 
+    };
+    info.addTo(map);
+
+     // Add Legend, generate swatches, labels 
+     var legend = L.control({position: 'bottomright'});   
+     legend.onAdd = function(map){
+        var legendDiv = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 2500, 5000, 7500, 10000, 20000], // data classes 
+            labels = [];
+         legendDiv.innerHTML = '<h4>POI Count</h4>'; 
+        for (var i = 0; i < grades.length; i++) {
+          legendDiv.innerHTML +=
+              '<i style="background:' + getDataClassColor(grades[i] + 1) + '"></i> ' +
+               grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br />' : '+');
+        }
+        return legendDiv;
+     };
+     legend.addTo(map);
+
+  })(); 
+  
+  
+  </script>
+
 
 </body>
 </html>
