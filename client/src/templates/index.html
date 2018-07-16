@@ -8,19 +8,77 @@
   <!-- leaflet styles (cdn) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
   <style>
-    .dark {
+    .dark-theme {
       background-color: rgba(0,0,0,0.9);
+    }
+    
+    .dataviz-container {
+      display: flex;
     }
     .map-canvas {
       border-radius: 20px;	
-      height: 700px;	
-      margin: 30px auto;
-      width:  1000px;
+      height: 500px;	
+      margin: 30px 15px;
+      flex: 2.25;
     }
+
+    .datatable-canvas {
+      border-radius: 20px;	
+      background-color: #DDD;
+      color: #000;
+      flex: 1;
+      height: 500px;
+      overflow-y: scroll;
+      margin: 30px 15px;	
+    }
+
+    .datatable-contents {
+      padding: 15px 20px;
+    }
+
+    table {
+      margin: 0 auto;
+    }
+
+    table .header-cell {
+      background-color: rgb(63,0,125);
+      border-top-left-radius: 10px;
+      color: rgb(255,255,255);
+      font-size: 14px;
+      font-family: Arial, Helvetica, sans-serif;  
+      padding: 10px 18px;
+      padding-left: 6px;
+    }
+
+    table .header-right-cell {
+      border-top-left-radius: 0;
+      border-top-right-radius: 10px;
+      padding-left: 18px;
+      padding-right: 5px;
+      
+    }
+
+    table .cell, table .total-cell {
+      padding: 5px;
+    }
+
+    table .total-cell {
+      text-align: right;
+    }
+    
+
+    table .odd-row {
+      background-color: rgb(255,255,255);
+    }
+
+    table .even-row {
+      background-color: rgb(205, 205, 205);
+    }
+
+
     .info {
       padding: 6px 8px;
       font: 14px/16px Arial, Helvetica, sans-serif;
-      background: white;
       background: rgba(255,255,255,0.8);
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       border-radius: 10px;
@@ -48,10 +106,234 @@
     }
   </style>
 </head>
-<body class="dark">
+<body class="dark-theme">
   
-  <!-- map mount point -->
-  <div class="map-canvas" id="poi-choropleth-map"></div>
+    <!-- flexbox container -->
+    <main class="dataviz-container">
+
+      <!-- map mount point -->
+      <div class="map-canvas" id="poi-choropleth-map"></div>
+
+      <!-- data table mount point -->
+      <div class="datatable-canvas">
+        
+        <div class="datatable-contents">   
+          
+          <table>
+            <tr>
+              <td class="header-cell">U.S. State</td>
+              <td class="header-cell header-right-cell">POI Count</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Alabama</td>
+              <td class="cell total-cell">4630</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Alaska</td>
+              <td class="cell total-cell">1798</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Arizona</td>
+              <td class="cell total-cell">5763</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Arkansas</td>
+              <td class="cell total-cell">3324</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">California</td>
+              <td class="cell total-cell">32736</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Colorado</td>
+              <td class="cell total-cell">6215</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Connecticut</td>
+              <td class="cell total-cell">4074</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Delaware</td>
+              <td class="cell total-cell">926</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Washington D.C.</td>
+              <td class="cell total-cell">1085</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Florida</td>
+              <td class="cell total-cell">17561</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Georgia</td>
+              <td class="cell total-cell">9285</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Hawaii</td>
+              <td class="cell total-cell">1784</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Idaho</td>
+              <td class="cell total-cell">2225</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Illinois</td>
+              <td class="cell total-cell">14413</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Indiana</td>
+              <td class="cell total-cell">7009</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Iowa</td>
+              <td class="cell total-cell">4720</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Kansas</td>
+              <td class="cell total-cell">4305</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Kentucky</td>
+              <td class="cell total-cell">4065</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Louisiana</td>
+              <td class="cell total-cell">4744</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Maine</td>
+              <td class="cell total-cell">2682</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Maryland</td>
+              <td class="cell total-cell">6016</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Massachusetts</td>
+              <td class="cell total-cell">8873</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Michigan</td>
+              <td class="cell total-cell">11921</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Minnesota</td>
+              <td class="cell total-cell">7019</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Mississippi</td>
+              <td class="cell total-cell">2831</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Missouri</td>
+              <td class="cell total-cell">6997</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Montana</td>
+              <td class="cell total-cell">2025</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Nebraska</td>
+              <td class="cell total-cell">2908</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Nevada</td>
+              <td class="cell total-cell">2077</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">New Hampshire</td>
+              <td class="cell total-cell">2137</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">New Jersey</td>
+              <td class="cell total-cell">9498</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">New Mexico</td>
+              <td class="cell total-cell">2560</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">New York</td>
+              <td class="cell total-cell">21775</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">North Carolina</td>
+              <td class="cell total-cell">8537</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">North Dakota</td>
+              <td class="cell total-cell">1512</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Ohio</td>
+              <td class="cell total-cell">13171</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Oklahoma</td>
+              <td class="cell total-cell">3947</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Oregon</td>
+              <td class="cell total-cell">4974</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Pennsylvania</td>
+              <td class="cell total-cell">15300</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Rhode Island</td>
+              <td class="cell total-cell">1400</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">South Carolina</td>
+              <td class="cell total-cell">4826</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">South Dakota</td>
+              <td class="cell total-cell">1586</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Tennessee</td>
+              <td class="cell total-cell">6034</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Texas</td>
+              <td class="cell total-cell">22923</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Utah</td>
+              <td class="cell total-cell">3099</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Vermont</td>
+              <td class="cell total-cell">1451</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Virginia</td>
+              <td class="cell total-cell">8031</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Washington</td>
+              <td class="cell total-cell">7253</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">West Virginia</td>
+              <td class="cell total-cell">1827</td>
+            </tr>
+            <tr class="even-row">
+              <td class="cell">Wisconsin</td>
+              <td class="cell total-cell">8186</td>
+            </tr>
+            <tr class="odd-row">
+              <td class="cell">Wyoming</td>
+              <td class="cell total-cell">1225</td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+
+    </main> 
 
   <!-- leafletJS lib (cdn) -->
   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
@@ -160,11 +442,32 @@
      };
      legend.addTo(map);
 
+  document.addEventListener("DOMContentLoaded", logData);
+
+    function logData(e){  
+      //loop over the array and log them all
+      const stateNames = usStatesPoiData.features.map( (feature) => { 
+        return `${feature.properties.name}`;
+       });
+
+       stateNames.forEach((state) => {
+         console.log(state);
+       });
+
+       const poiCounts = usStatesPoiData.features.map( (feature) => { 
+        return +`${feature.properties.poi_count}`;
+       });
+
+       // use reduce to sum up the counts
+       const totalPoiCount = poiCounts.reduce((total, count) => {
+         return total + count;
+       },0);
+       
+       console.log('Total POI Count:', totalPoiCount);
+    }
+
   })(); 
-  
-  
   </script>
-
-
+  
 </body>
 </html>
