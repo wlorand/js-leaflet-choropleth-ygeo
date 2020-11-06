@@ -1,2 +1,3 @@
-# dataviz-wherehaus-us-poi-choropleth
-Choropleth map of WhereHaus POIs at U.S. country scale that displays the count of POIs per State
+# JS Leaflet Choropleth YGEO
+
+Choropleth map of Yahoo! Map Points of Interest per U.S. State
